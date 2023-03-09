@@ -1,5 +1,6 @@
 package com.example.superheltev4numedspringbootoops.Controllers;
 
+import com.example.superheltev4numedspringbootoops.DTO.HeroPowerCountDTO;
 import com.example.superheltev4numedspringbootoops.Model.SuperHero;
 import com.example.superheltev4numedspringbootoops.Repositories.Database;
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,5 +34,18 @@ ArrayList<SuperHero> heroList = db.getAllHeroesDB();
         SuperHero hero = db.GetHeroFromNameDB(realName);
         return new ResponseEntity<>(hero, HttpStatus.OK);
 }
+
+@GetMapping(path="powerCount")
+    public ResponseEntity<List<HeroPowerCountDTO>> getHeroPower(){
+       ArrayList<HeroPowerCountDTO> heroList = db.getListOfNamesAndNoOfPowers();
+     return new ResponseEntity<>(heroList, HttpStatus.OK);
+}
+
+    //TODO hvorfor virker det her ikke
+/*@GetMapping("/herov4")
+    public ResponseEntity<SuperHero> getHeroFromID(@RequestParam int heroID){
+        SuperHero hero = db.GetHeroFromNameID(heroID);
+        return new ResponseEntity<>(hero, HttpStatus.OK);
+    }*/
 }
 
