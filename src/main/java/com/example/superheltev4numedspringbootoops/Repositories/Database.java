@@ -1,6 +1,8 @@
 package com.example.superheltev4numedspringbootoops.Repositories;
 
+import com.example.superheltev4numedspringbootoops.DTO.HeroCityDTO;
 import com.example.superheltev4numedspringbootoops.DTO.HeroPowerCountDTO;
+import com.example.superheltev4numedspringbootoops.DTO.HeroPowersDTO;
 import com.example.superheltev4numedspringbootoops.Model.SuperHero;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -8,8 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 
-@Repository
-public class Database {
+@Repository("database_repository")
+public class Database implements RepositoryInterface{
 
     @Value("${spring.datasource.url}")
     private String db_url;
@@ -25,11 +27,11 @@ public class Database {
     Statement stmt;
     PreparedStatement ps;
 
-    SuperHeroRepository_DB shp;
+    StubRepository shp;
 
     public Database() {
 
-        shp = new SuperHeroRepository_DB();
+        shp = new StubRepository();
     }
 
     /*
@@ -85,7 +87,6 @@ public class Database {
     // 2. En superhelt med et bestemt heroName eller en liste med alle superhelte, der indeholder: heroName, realName og antallet af superkræfter (Superpower)
     public ArrayList<HeroPowerCountDTO> getListOfNamesAndNoOfPowers() {
         ArrayList<HeroPowerCountDTO> heroList = new ArrayList<>();
-        System.out.println(db_url + " " + uid + " " + pwd);
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
             SQL = "select heroName, realName,count(powerID) from superHero join superPower_superhero using(heroID) group by heroID;";
             stmt = con.createStatement();
@@ -95,6 +96,60 @@ public class Database {
                 String realName = rs.getString("realName");
                 int powerCount = rs.getInt("count(powerID)");
                 heroList.add(new HeroPowerCountDTO(heroName, realName, powerCount));
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return heroList;
+    }
+
+    public ArrayList<HeroPowersDTO> getListOfNamesAndPowers() {
+        ArrayList<HeroPowersDTO> heroList = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
+            SQL = "select heroName, realname, powerName from superHero left outer join superPower_superhero using(heroID) left outer join superpower using(powerID)";
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(SQL);
+            String currentName = "";
+            HeroPowersDTO currentDTO = null;
+            while (rs.next()) {
+                String heroName = rs.getString("heroName");
+                String realName = rs.getString("realName");
+                if(heroName.equals(currentName)){
+                    currentDTO.addPower(rs.getString("powerName"));
+                }
+                else{
+                    currentDTO = new HeroPowersDTO(heroName, realName);
+                    currentName = heroName;
+                    currentDTO.addPower(rs.getString("powerName"));
+                }
+                heroList.add(currentDTO);
+            }
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+        return heroList;
+    }
+
+    //4. En superhelt med et bestemt heroName eller en liste med alle superhelte, der indeholder: heroName og by (City)*/
+    public ArrayList<HeroCityDTO> getListOfNamesAndCity() {
+        ArrayList<HeroCityDTO> heroList = new ArrayList<>();
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
+            SQL = "select heroName, cityname from superhero join city using(zipcode) order by cityname";
+            stmt = con.createStatement();
+            rs = stmt.executeQuery(SQL);
+            String currentCity = "";
+            HeroCityDTO currentDTO = null;
+            while (rs.next()) {
+                String cityName = rs.getString("cityName");
+                if(cityName.equals(currentCity)){
+                    currentDTO.addHeroName(rs.getString("heroName"));
+                }
+                else{
+                    currentDTO = new HeroCityDTO(cityName);
+                    currentCity = cityName;
+                    currentDTO.addHeroName(rs.getString("heroName"));
+                }
+                heroList.add(currentDTO);
             }
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
