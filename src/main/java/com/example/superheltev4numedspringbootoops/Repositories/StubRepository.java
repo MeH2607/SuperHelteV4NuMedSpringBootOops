@@ -57,15 +57,38 @@ public class StubRepository implements RepositoryInterface {
         return heroDatabase;
     }
 
-    public ArrayList<HeroPowerCountDTO> getListOfNamesAndNoOfPowers() {
+    public SuperHero getHeroFromNameDB(String heroNameInput){
+        for (SuperHero superHero : heroDatabase) {
+            if(superHero.getHeroName().equals(heroNameInput)){
+                return superHero;
+            }
+        }
+        return null;
+    }
+
+
+        public ArrayList<HeroPowerCountDTO> getListOfNamesAndNoOfPowers() {
         return heroPowerCountList;
+    }
+
+    public  HeroPowerCountDTO getNameAndNoOfPowersFromName(String heroNameInput) {
+        return heroPowerCountList.get(0);
     }
 
     public ArrayList<HeroPowersDTO> getListOfNamesAndPowers() {
         return heroPowersListList;
     }
 
+    public HeroPowersDTO getNameAndPowersFromName(String heroNameInput){
+        return heroPowersListList.get(1);
+    }
+
     public ArrayList<HeroCityDTO> getListOfNamesAndCity() {
         return cityList;
     }
+
+   public HeroCityDTO getNamesAndCityFromCity(String cityNameInput){
+        return cityList.get(1);
+   }
+
 }

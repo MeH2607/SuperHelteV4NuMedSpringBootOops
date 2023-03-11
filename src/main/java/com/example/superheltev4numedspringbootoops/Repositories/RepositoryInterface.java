@@ -9,13 +9,18 @@ import java.util.ArrayList;
 
 public interface RepositoryInterface {
 
-    public ArrayList<SuperHero> getAllHeroesDB();
+     ArrayList<SuperHero> getAllHeroesDB();
+     SuperHero getHeroFromNameDB(String heroNameInput);
 
-    public ArrayList<HeroPowerCountDTO> getListOfNamesAndNoOfPowers();
+     ArrayList<HeroPowerCountDTO> getListOfNamesAndNoOfPowers();
+    HeroPowerCountDTO getNameAndNoOfPowersFromName(String heroNameInput);
 
-    public ArrayList<HeroPowersDTO> getListOfNamesAndPowers();
+     ArrayList<HeroPowersDTO> getListOfNamesAndPowers();
+     HeroPowersDTO getNameAndPowersFromName(String heroNameInput);
 
-    public ArrayList<HeroCityDTO> getListOfNamesAndCity();
+     ArrayList<HeroCityDTO> getListOfNamesAndCity();
+    HeroCityDTO getNamesAndCityFromCity(String cityNameInput);
 
 
-}
+
+    }
