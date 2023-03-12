@@ -201,30 +201,24 @@ public class DbRepository implements RepositoryInterface{
     }
 
     public HeroCityDTO getNamesAndCityFromCity(String cityNameInput){
-        return new HeroCityDTO("cityname");
-    }
-
-   /* public SuperHero GetHeroFromNameID(int IDInput) {
-        SuperHero hero = null;
-        System.out.println(db_url + " " + uid + " " + pwd);
+        HeroCityDTO hero = null;
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
-            SQL = "select heroID, heroName, realName, creationYEar from superhero where heroID = ?";
+            SQL = "select heroName, cityname from superhero join city using(zipcode) where cityName = ?";
             ps = con.prepareStatement(SQL);
-            ps.setInt(1, IDInput);
+            ps.setString(1, cityNameInput);
             rs = ps.executeQuery();
             while (rs.next()) {
-                int id = rs.getInt("heroID");
-                String heroName = rs.getString("heroName");
-                String realName = rs.getString("realName");
-                int creationYear = rs.getInt("creationYear");
-                hero = new SuperHero(id, heroName, realName, creationYear);
+                String cityName = rs.getString("cityName");
+                hero = new HeroCityDTO(cityName);
+                while(rs.next()){
+                    hero.addHeroName(rs.getString("heroName"));
+                }
             }
-            System.out.println(hero.getHeroName());
-            return hero;
         } catch (SQLException ex) {
             throw new RuntimeException(ex);
         }
-    }*/
+        return hero;
+    }
 }
 
 

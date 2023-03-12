@@ -66,16 +66,14 @@ ArrayList<SuperHero> heroList = repository.getAllHeroesDB();
 
 @GetMapping(path="cities")
     public ResponseEntity<List<HeroCityDTO>> getHeroesInAllCities(){
-    System.out.println("CityWok");
         ArrayList<HeroCityDTO> heroList = repository.getListOfNamesAndCity();
         return new ResponseEntity<>(heroList, HttpStatus.OK);
 }
 
-    //TODO hvorfor virker det her ikke
-/*@GetMapping("/herov4")
-    public ResponseEntity<SuperHero> getHeroFromID(@RequestParam int heroID){
-        SuperHero hero = db.GetHeroFromNameID(heroID);
+@GetMapping(path="cities/{cityName}")
+    public ResponseEntity<HeroCityDTO> getNamesAndCityFromCity(@PathVariable String cityName){
+        HeroCityDTO hero = repository.getNamesAndCityFromCity(cityName);
         return new ResponseEntity<>(hero, HttpStatus.OK);
-    }*/
+}
 }
 
