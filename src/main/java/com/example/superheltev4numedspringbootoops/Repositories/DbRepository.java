@@ -191,6 +191,7 @@ public class DbRepository implements RepositoryInterface{
                         currentCity = cityName;
                         currentDTO.addHeroName(rs.getString("heroName"));
                     }
+                    if(!heroList.contains(currentDTO))
                 heroList.add(currentDTO);
             }
 
