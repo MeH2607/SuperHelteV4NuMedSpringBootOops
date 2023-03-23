@@ -11,7 +11,7 @@ import java.sql.*;
 import java.util.ArrayList;
 
 @Repository("database_repository")
-public class DbRepository implements RepositoryInterface{
+public class DbRepository implements RepositoryInterface {
 
     @Value("${spring.datasource.url}")
     private String db_url;
@@ -33,9 +33,6 @@ public class DbRepository implements RepositoryInterface{
 
         shp = new StubRepository();
     }
-
-
-
 
 
     public ArrayList<SuperHero> getAllHeroesDB() {
@@ -99,7 +96,8 @@ public class DbRepository implements RepositoryInterface{
         }
         return heroList;
     }
-    public  HeroPowerCountDTO getNameAndNoOfPowersFromName(String heroNameInput) {
+
+    public HeroPowerCountDTO getNameAndNoOfPowersFromName(String heroNameInput) {
         HeroPowerCountDTO hero = null;
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
             SQL = "select heroName, realName,count(powerID) from superHero join superPower_superhero using(heroID) group by heroID HAVING heroName = ?;";
@@ -119,7 +117,6 @@ public class DbRepository implements RepositoryInterface{
     }
 
 
-
     public ArrayList<HeroPowersDTO> getListOfNamesAndPowers() {
         ArrayList<HeroPowersDTO> heroList = new ArrayList<>();
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
@@ -131,10 +128,9 @@ public class DbRepository implements RepositoryInterface{
             while (rs.next()) {
                 String heroName = rs.getString("heroName");
                 String realName = rs.getString("realName");
-                if(heroName.equals(currentName)){
+                if (heroName.equals(currentName)) {
                     currentDTO.addPower(rs.getString("powerName"));
-                }
-                else{
+                } else {
                     currentDTO = new HeroPowersDTO(heroName, realName);
                     currentName = heroName;
                     currentDTO.addPower(rs.getString("powerName"));
@@ -147,7 +143,7 @@ public class DbRepository implements RepositoryInterface{
         return heroList;
     }
 
-    public HeroPowersDTO getNameAndPowersFromName(String heroNameInput){
+    public HeroPowersDTO getNameAndPowersFromName(String heroNameInput) {
         HeroPowersDTO hero = null;
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
             SQL = "select heroName, realname, powerName from superHero left outer join superPower_superhero using(heroID) left outer join superpower using(powerID) HAVING Heroname=?";
@@ -158,7 +154,7 @@ public class DbRepository implements RepositoryInterface{
                 String heroName = rs.getString("heroName");
                 String realName = rs.getString("realName");
                 hero = new HeroPowersDTO(heroName, realName);
-                while(rs.next()){
+                while (rs.next()) {
                     hero.addPower(rs.getString("powerName"));
                 }
             }
@@ -167,10 +163,6 @@ public class DbRepository implements RepositoryInterface{
         }
         return hero;
     }
-
-
-
-
 
 
     //4. En superhelt med et bestemt heroName eller en liste med alle superhelte, der indeholder: heroName og by (City)*/
@@ -184,15 +176,15 @@ public class DbRepository implements RepositoryInterface{
             HeroCityDTO currentDTO = null;
             while (rs.next()) {
                 String cityName = rs.getString("cityName");
-                    if (cityName.equals(currentCity)) {
-                        currentDTO.addHeroName(rs.getString("heroName"));
-                    } else {
-                        currentDTO = new HeroCityDTO(cityName);
-                        currentCity = cityName;
-                        currentDTO.addHeroName(rs.getString("heroName"));
-                    }
-                    if(!heroList.contains(currentDTO))
-                heroList.add(currentDTO);
+                if (cityName.equals(currentCity)) {
+                    currentDTO.addHeroName(rs.getString("heroName"));
+                } else {
+                    currentDTO = new HeroCityDTO(cityName);
+                    currentCity = cityName;
+                    currentDTO.addHeroName(rs.getString("heroName"));
+                }
+                if (!heroList.contains(currentDTO))
+                    heroList.add(currentDTO);
             }
 
         } catch (SQLException ex) {
@@ -201,7 +193,7 @@ public class DbRepository implements RepositoryInterface{
         return heroList;
     }
 
-    public HeroCityDTO getNamesAndCityFromCity(String cityNameInput){
+    public HeroCityDTO getNamesAndCityFromCity(String cityNameInput) {
         HeroCityDTO hero = null;
         try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/superherodb", "root", "mohamed")) {
             SQL = "select heroName, cityname from superhero join city using(zipcode) where cityName = ?";
@@ -211,7 +203,7 @@ public class DbRepository implements RepositoryInterface{
             while (rs.next()) {
                 String cityName = rs.getString("cityName");
                 hero = new HeroCityDTO(cityName);
-                while(rs.next()){
+                while (rs.next()) {
                     hero.addHeroName(rs.getString("heroName"));
                 }
             }
